@@ -1,0 +1,1 @@
+INSERT INTO accommodations(id,name,destination,rooms_available,nightly_rate) VALUES (1001,'Costa Azul Resort','Spain',12,145),(1002,'Barcelona Central Hotel','Spain',8,110),(1003,'Alpine View Lodge','Switzerland',6,190),(1004,'Coastal Garden Stay','Portugal',10,125);

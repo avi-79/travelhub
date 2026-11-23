@@ -1,0 +1,1 @@
+CREATE TABLE accommodations (id BIGINT PRIMARY KEY,name VARCHAR(160) NOT NULL,destination VARCHAR(100) NOT NULL,rooms_available INTEGER NOT NULL CHECK(rooms_available>=0),nightly_rate INTEGER NOT NULL CHECK(nightly_rate>=0));

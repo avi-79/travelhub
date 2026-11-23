@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: traveluser
+      POSTGRES_PASSWORD: travelpass
+      POSTGRES_DB: postgres
+    ports: ["5432:5432"]
+    volumes: ["travelhub-postgres-data:/var/lib/postgresql/data","./database/init:/docker-entrypoint-initdb.d:ro"]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U traveluser -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+  accommodation-service:
+    build: {context: ., dockerfile: accommodation-service/Dockerfile}
+    environment: {DB_URL: jdbc:postgresql://postgres:5432/accommodation_db, DB_USERNAME: traveluser, DB_PASSWORD: travelpass}
+    ports: ["8081:8081"]
+    depends_on: {postgres: {condition: service_healthy}}
+  booking-service:
+    build: {context: ., dockerfile: booking-service/Dockerfile}
+    environment: {DB_URL: jdbc:postgresql://postgres:5432/booking_db, DB_USERNAME: traveluser, DB_PASSWORD: travelpass, ACCOMMODATION_SERVICE_URL: http://accommodation-service:8081}
+    ports: ["8082:8082"]
+    depends_on: {postgres: {condition: service_healthy}, accommodation-service: {condition: service_started}}
+  api-gateway:
+    build: {context: ., dockerfile: api-gateway/Dockerfile}
+    environment: {ACCOMMODATION_SERVICE_URL: http://accommodation-service:8081, BOOKING_SERVICE_URL: http://booking-service:8082}
+    ports: ["8080:8080"]
+    depends_on: [accommodation-service, booking-service]
+volumes:
+  travelhub-postgres-data:

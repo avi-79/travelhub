@@ -1,0 +1,15 @@
+server:
+  port: 8081
+spring:
+  application: {name: accommodation-service}
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/accommodation_db}
+    username: ${DB_USERNAME:traveluser}
+    password: ${DB_PASSWORD:travelpass}
+  jpa: {hibernate: {ddl-auto: validate}, open-in-view: false}
+  flyway: {enabled: true}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

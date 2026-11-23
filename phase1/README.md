@@ -1,54 +1,67 @@
-# TravelHub Phase 1
+# TravelHub — Phase 1: Spring Boot microservices
 
-Standalone travel accommodation/booking learning project. It is inspired by the travel business domain only; it is not TUI software and contains no TUI code, data or internal design.
+Phase 1 is a local learning project with an API Gateway, Accommodation Service, Booking Service and PostgreSQL. Each business service owns its own database. The gateway routes client requests; Booking Service calls the Accommodation Service inventory API rather than accessing its database directly.
 
-## Components
-- Accommodation Service (Spring Boot, 8081): catalogue and room inventory.
-- Booking Service (Spring Boot, 8082): create/list/get/cancel bookings.
-- API Gateway (Spring Boot, 8080): public API and simple web page.
-- PostgreSQL 16: separate database per service. Flyway creates tables.
+## Architecture
+
+```text
+Client -> API Gateway :8080 -> Accommodation Service :8081 -> accommodation_db
+                           -> Booking Service :8082 -> booking_db
+                                            |-- HTTP reserve/release --> Accommodation Service
+PostgreSQL :5432 (two separate databases)
+```
 
 ## Requirements
-JDK 21, Maven 3.9+, Docker with Compose. Check `java -version`, `mvn -version`, `docker compose version`.
+- JDK 21
+- Maven 3.9+
+- Docker Engine and Docker Compose v2
 
-## Start database
-From this directory: `docker compose up -d postgres` then `docker compose ps`. Wait until healthy. Local lab credentials: `traveluser` / `travelpass`; do not use outside this machine.
+## Start the full application
+From this directory:
 
-## Build
-`mvn clean package`
+```bash
+docker compose up --build
+```
 
-## Run (three terminals from project root)
-1. `mvn -pl accommodation-service spring-boot:run`
-2. `mvn -pl booking-service spring-boot:run`
-3. `mvn -pl api-gateway spring-boot:run`
-Open http://localhost:8080/. Health: `/actuator/health` on ports 8080, 8081 and 8082.
+The first startup creates both databases; Flyway creates the tables and sample accommodation records. Endpoints:
+- Gateway: http://localhost:8080
+- Accommodations: http://localhost:8080/api/accommodations
+- Health: http://localhost:8080/actuator/health (also available on ports 8081 and 8082)
 
-## APIs via gateway
-- `GET /api/accommodations`
-- `GET /api/accommodations?destination=Spain`
-- `GET /api/bookings`
-- `POST /api/bookings` JSON: `{"accommodationId":1001,"guestName":"Alex Morgan","checkIn":"2027-05-10","checkOut":"2027-05-14","rooms":2}`
-- `GET /api/bookings/{reference}`
-- `POST /api/bookings/{reference}/cancel`
+Create a sample booking:
 
-Example search: `curl -i 'http://localhost:8080/api/accommodations?destination=Spain'`
-Example booking: `curl -i -X POST http://localhost:8080/api/bookings -H 'Content-Type: application/json' -d '{"accommodationId":1001,"guestName":"Alex Morgan","checkIn":"2027-05-10","checkOut":"2027-05-14","rooms":2}'`
+```bash
+curl -X POST http://localhost:8080/api/bookings \\
+  -H 'Content-Type: application/json' \\
+  -d '{"accommodationId":1001,"guestName":"Alex Morgan","checkIn":"2027-05-10","checkOut":"2027-05-14","rooms":2}'
+```
 
-## Data verification
-`docker compose exec postgres psql -U traveluser -d travel_accommodation -c 'select * from accommodations;'`
-`docker compose exec postgres psql -U traveluser -d travel_booking -c 'select * from bookings;'`
+Use `GET /api/bookings`, `GET /api/bookings/{reference}`, and `POST /api/bookings/{reference}/cancel`. Search destinations with `GET /api/accommodations?destination=Spain`.
 
-## Design explanation
-The gateway is the browser-facing entry point. It forwards requests to the owning service. Accommodation Service owns its catalogue and inventory database; Booking Service owns booking records. Booking Service calls the inventory API; it never queries the other service's database directly. Inventory is decremented with a conditional SQL update (`rooms_available >= requested`) so concurrent requests cannot drive the count below zero.
+## Run with Maven
+Start PostgreSQL first using `docker compose up -d postgres`. Then run each command in a separate terminal from this directory:
 
-Booking workflow: validate dates and guest fields -> reserve inventory through Accommodation Service -> persist booking -> return reference. Cancellation releases inventory and changes status. This is an educational distributed workflow, not a complete production saga: a crash/network failure across services can require reconciliation. Production hardening (idempotency, durable outbox/saga, retries, auth, audit, monitoring) comes later.
+```bash
+mvn clean package
+mvn -pl accommodation-service spring-boot:run
+mvn -pl booking-service spring-boot:run
+mvn -pl api-gateway spring-boot:run
+```
+
+## Implementation notes
+- Accommodation Service owns catalogue and inventory; Booking Service owns bookings.
+- Inventory reservation uses a conditional SQL update, preventing concurrent requests from reserving more rooms than are available.
+- Booking validates dates, reserves inventory, then persists the booking. If persistence fails, it attempts to compensate by releasing inventory.
+- Cancellation releases inventory and marks the booking cancelled; a repeated cancellation returns HTTP 409.
+- Flyway owns schema changes; Hibernate uses `ddl-auto: validate`.
+- Actuator exposes health and info.
 
 ## Troubleshooting
-- DB not ready: `docker compose ps`, `docker compose logs postgres`, `docker compose exec postgres pg_isready -U traveluser`.
-- DB missing/credentials: check `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`. Init scripts run only on an empty volume. For disposable lab data only, `docker compose down -v` then `docker compose up -d postgres` (this deletes DB data).
-- Port conflict: Linux `ss -lntp | grep -E '8080|8081|8082|5432'`; Windows `netstat -ano | findstr "8080 8081 8082 5432"`.
-- Gateway 502: check backend health on 8081/8082 and configured service URLs.
-- Booking 409: insufficient room stock or booking already cancelled.
-- Flyway failure: inspect first SQL error in service logs; do not modify an already-applied migration.
+- Check database startup: `docker compose logs postgres`; readiness: `docker compose exec postgres pg_isready -U traveluser`.
+- Postgres initialization scripts run only when the data volume is first created.
+- Reset this disposable lab database with `docker compose down -v` (this deletes the local database volume).
+- If the gateway returns a 5xx response, inspect `docker compose logs accommodation-service booking-service api-gateway`.
+- HTTP 409 when booking usually means insufficient inventory; cancellation conflicts if already cancelled.
 
-No authentication, payment processing or public deployment is included. Do not expose this demo to the internet. AWS/EKS, Dockerfiles, Kubernetes, Helm, Ingress, OpenLens, Jenkins and Argo CD are later stages.
+## Scope and next phases
+This is an educational starter, not a production booking platform. Authentication, payments, durable saga/outbox, idempotency keys, and production-grade retry handling are not included. Keep it local and do not expose it publicly. Kubernetes, Helm, Ingress, OpenLens, CI/CD and Argo CD are planned for later phases.
