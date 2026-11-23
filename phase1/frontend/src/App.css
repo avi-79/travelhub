@@ -153,3 +153,27 @@ body { background: #f7f9fc; color: var(--ink); }
   .why-heading h2 { font-size: 47px; }
   .footer { padding: 28px 6%; }
 }
+
+
+/* Destination discovery cards */
+.destination-discovery{width:min(1180px,88%);margin:0 auto 108px}
+.destination-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}
+.destination-heading h2{font:600 clamp(32px,4vw,46px)/1.08 Manrope,sans-serif;letter-spacing:-1.8px;color:#123b65;margin:13px 0 9px}
+.destination-heading p{font-size:14px;color:#64778b;margin:0}
+.destination-view-all{display:flex;align-items:center;gap:9px;border:0;background:none;color:#0756a4;font-weight:700;font-size:13px;padding:10px 0}
+.destination-tiles{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:18px}
+.destination-tile{position:relative;min-height:310px;border:0;border-radius:10px;overflow:hidden;text-align:left;background-size:cover;background-position:center;isolation:isolate;cursor:pointer;box-shadow:0 8px 24px rgba(14,48,82,.10);transition:transform .22s ease,box-shadow .22s ease}
+.destination-tile::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,24,48,.82),rgba(3,24,48,.03) 72%);z-index:-1;transition:opacity .2s}
+.destination-tile:hover{transform:translateY(-5px);box-shadow:0 18px 34px rgba(14,48,82,.18)}
+.destination-tile:hover::before{opacity:.88}
+.destination-spain{background-image:url("https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=1100&auto=format&fit=crop")}
+.destination-portugal{background-image:url("https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=900&auto=format&fit=crop")}
+.destination-switzerland{background-image:url("https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=900&auto=format&fit=crop")}
+.destination-tile-copy{position:absolute;left:25px;right:20px;bottom:24px;display:flex;flex-direction:column;align-items:flex-start;color:#fff}
+.destination-tile-copy small{font-size:9px;letter-spacing:1.6px;font-weight:700;color:#fff0a4}
+.destination-tile-copy strong{font:500 clamp(30px,3.5vw,43px)/1.1 Georgia,serif;letter-spacing:-.8px;margin:8px 0 13px}
+.destination-tile-copy em{font-style:normal;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700}
+.destination-tile-copy em svg{transition:transform .2s}
+.destination-tile:hover .destination-tile-copy em svg{transform:translateX(4px)}
+@media(max-width:800px){.destination-tiles{grid-template-columns:1fr 1fr}.destination-tile:first-child{grid-column:span 2;min-height:280px}.destination-tile{min-height:240px}}
+@media(max-width:560px){.destination-discovery{width:90%;margin-bottom:75px}.destination-heading{align-items:flex-start;flex-direction:column;gap:10px}.destination-heading h2{font-size:34px}.destination-heading p{font-size:13px}.destination-tiles{grid-template-columns:1fr;gap:13px}.destination-tile:first-child{grid-column:auto}.destination-tile{min-height:245px}.destination-tile-copy{left:20px;bottom:20px}}
