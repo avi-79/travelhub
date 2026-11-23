@@ -15,6 +15,8 @@ const photos = {
 const fallbackPhoto = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1000&auto=format&fit=crop";
 const money = (value) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "GBP", maximumFractionDigits: 0 }).format(Number(value || 0));
 const dateLabel = (value) => value ? new Date(`${value}T00:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "—";
+const localDateValue = (date = new Date()) => { const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000); return local.toISOString().slice(0, 10); };
+const nightsBetween = (start, end) => Math.max(0, Math.round((Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / 86400000));
 
 function App() {
   const [stays, setStays] = useState([]);
@@ -118,7 +120,9 @@ function App() {
     }
   };
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateValue();
+  const estimatedNights = form.checkIn && form.checkOut ? nightsBetween(form.checkIn, form.checkOut) : 0;
+  const estimatedTotal = selectedStay ? estimatedNights * Number(selectedStay.nightlyRate || 0) * Number(form.rooms || 1) : 0;
 
   return (
     <div className="site-shell">
@@ -155,7 +159,7 @@ function App() {
               </label>
               <button className="search-submit" type="submit"><Search size={18} /> Search holidays</button>
             </form>
-            <div className="hero-proof"><span><ShieldCheck size={15} /> Live availability</span><span><Globe2 size={15} /> Handpicked places</span></div>
+            <div className="hero-proof"><span><ShieldCheck size={15} /> Inventory checked at booking</span><span><Globe2 size={15} /> Handpicked places</span></div>
           </div>
           <div className="hero-caption"><span>01 / 03</span><span>THE WORLD IS WAITING</span></div>
         </section>
@@ -249,8 +253,9 @@ function App() {
             <form className="booking-form" onSubmit={submitBooking}>
               <label className="full-field">Guest full name<input name="guestName" value={form.guestName} onChange={updateForm} required maxLength="120" placeholder="Name on the reservation" /></label>
               <div className="form-two"><label>Check-in<input type="date" name="checkIn" min={today} value={form.checkIn} onChange={updateForm} required /></label><label>Check-out<input type="date" name="checkOut" min={form.checkIn || today} value={form.checkOut} onChange={updateForm} required /></label></div>
+              {estimatedNights > 0 && <div className="booking-estimate"><span>{estimatedNights} night(s) × {form.rooms} room(s)</span><strong>Estimated total {money(estimatedTotal)}</strong></div> }
               <label className="full-field">Number of rooms<select name="rooms" value={form.rooms} onChange={updateForm}>{Array.from({ length: Math.min(10, selectedStay.roomsAvailable) }, (_, i) => i + 1).map((count) => <option value={count} key={count}>{count} {count === 1 ? "room" : "rooms"}</option>)}</select></label>
-              <p className="form-note"><ShieldCheck size={15} /> Your booking is confirmed only after the service successfully reserves inventory.</p>
+              <p className="form-note"><ShieldCheck size={15} /> Your booking is confirmed only after the service successfully reserves inventory. This demo does not collect payment.</p>
               <button className="confirm-button" type="submit" disabled={bookingLoading}>{bookingLoading ? <><LoaderCircle className="spin" size={18} /> Confirming…</> : <>Confirm booking <ArrowRight size={17} /></>}</button>
             </form>
           </section>
