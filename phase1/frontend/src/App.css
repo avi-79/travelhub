@@ -30,3 +30,6 @@
 .status.confirmed{background:#eaf4ff;color:#0756a4}
 .confirm-button{background:#0756a4}
 @media(max-width:650px){.main-nav{background:#fff}}
+
+.booking-estimate{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 14px;background:#eef5fc;border:1px solid #dbe9f7;color:#4f6680;font-size:11px}.booking-estimate strong{color:#0756a4;font:700 13px Manrope,sans-serif;text-align:right}
+@media(max-width:420px){.booking-estimate{align-items:flex-start;flex-direction:column}.booking-estimate strong{text-align:left}}
