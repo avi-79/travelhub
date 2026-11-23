@@ -13,7 +13,7 @@ const photos = {
   Portugal: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1000&auto=format&fit=crop"
 };
 const fallbackPhoto = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1000&auto=format&fit=crop";
-const money = (value) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(Number(value || 0));
+const money = (value) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "GBP", maximumFractionDigits: 0 }).format(Number(value || 0));
 const dateLabel = (value) => value ? new Date(`${value}T00:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "—";
 
 function App() {
@@ -125,18 +125,18 @@ function App() {
       <header className="topbar">
         <a className="brand" href="#home" onClick={() => setActiveTab("stays")}>
           <span className="brand-mark"><Compass size={21} /></span>
-          travel<span>hub</span><i>.</i>
+          <span className="brand-name">holidays</span>
         </a>
         <button className="mobile-toggle" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Toggle navigation">
           {mobileMenu ? <X /> : <Menu />}
         </button>
         <nav className={mobileMenu ? "main-nav open" : "main-nav"}>
-          <button className={activeTab === "stays" ? "nav-link active" : "nav-link"} onClick={() => { setActiveTab("stays"); setMobileMenu(false); }}>Discover stays</button>
+          <button className={activeTab === "stays" ? "nav-link active" : "nav-link"} onClick={() => { setActiveTab("stays"); setMobileMenu(false); }}>Holidays</button>
           <button className={activeTab === "bookings" ? "nav-link active" : "nav-link"} onClick={() => { setActiveTab("bookings"); setMobileMenu(false); }}>My bookings</button>
-          <a className="nav-link" href="#why" onClick={() => setMobileMenu(false)}>Why TravelHub</a>
+          <a className="nav-link" href="#why" onClick={() => setMobileMenu(false)}>Why Holidays</a>
         </nav>
         <button className="topbar-cta" onClick={() => { setActiveTab("stays"); document.getElementById("stays")?.scrollIntoView({ behavior: "smooth" }); }}>
-          Find a stay <ArrowRight size={16} />
+          Find a holiday <ArrowRight size={16} />
         </button>
       </header>
 
@@ -146,14 +146,14 @@ function App() {
           <div className="hero-shade" />
           <div className="hero-content">
             <div className="eyebrow light"><Sparkles size={14} /> MAKE ROOM FOR SOMEWHERE NEW</div>
-            <h1>Find your<br /><em>somewhere.</em></h1>
-            <p>Thoughtful stays. Memorable places. Your next great story starts here.</p>
+            <h1>Your next<br /><em>great escape.</em></h1>
+            <p>Discover inspiring places to stay and make more of every moment away.</p>
             <form className="search-panel" onSubmit={(event) => { event.preventDefault(); setSearch(destination); setActiveTab("stays"); document.getElementById("stays")?.scrollIntoView({ behavior: "smooth" }); }}>
               <label className="search-input-wrap">
                 <MapPin size={19} />
-                <span><small>WHERE TO?</small><input value={destination} onChange={(e) => setDestination(e.target.value)} placeholder="Search a destination or stay" /></span>
+                <span><small>WHERE WOULD YOU LIKE TO GO?</small><input value={destination} onChange={(e) => setDestination(e.target.value)} placeholder="Search a destination or hotel" /></span>
               </label>
-              <button className="search-submit" type="submit"><Search size={18} /> Explore stays</button>
+              <button className="search-submit" type="submit"><Search size={18} /> Search holidays</button>
             </form>
             <div className="hero-proof"><span><ShieldCheck size={15} /> Live availability</span><span><Globe2 size={15} /> Handpicked places</span></div>
           </div>
@@ -162,12 +162,12 @@ function App() {
 
         <section className="intro-row" id="stays">
           <div>
-            <div className="eyebrow"><span className="eyebrow-dot" /> THE STAY COLLECTION</div>
-            <h2>Places worth<br className="desktop-break" /> travelling for.</h2>
+            <div className="eyebrow"><span className="eyebrow-dot" /> THE HOLIDAY COLLECTION</div>
+            <h2>Your next escape<br className="desktop-break" /> starts here.</h2>
             <p className="section-copy">Explore our collection and find a place that feels like part of the journey.</p>
           </div>
           <div className="collection-stats">
-            <div><strong>{stays.length.toString().padStart(2, "0")}</strong><span>available stays</span></div>
+            <div><strong>{stays.length.toString().padStart(2, "0")}</strong><span>available places</span></div>
             <div><strong>{new Set(stays.map((stay) => stay.destination)).size.toString().padStart(2, "0")}</strong><span>destinations</span></div>
           </div>
         </section>
@@ -190,9 +190,9 @@ function App() {
               </div>
             </div>
 
-            {error && <div className="state-panel error-panel"><CircleAlert size={24} /><div><strong>We couldn't reach TravelHub</strong><p>{error}</p><button className="text-button" onClick={loadData}><RefreshCw size={15} /> Try again</button></div></div>}
+            {error && <div className="state-panel error-panel"><CircleAlert size={24} /><div><strong>We couldn't reach Holidays</strong><p>{error}</p><button className="text-button" onClick={loadData}><RefreshCw size={15} /> Try again</button></div></div>}
             {loading && <div className="loading-grid">{[1,2,3,4].map((item) => <div className="skeleton-card" key={item}><div /><span /><span /></div>)}</div>}
-            {!loading && !error && visibleStays.length === 0 && <div className="state-panel"><Search size={24} /><div><strong>No stays found</strong><p>Try another hotel name or destination.</p></div></div>}
+            {!loading && !error && visibleStays.length === 0 && <div className="state-panel"><Search size={24} /><div><strong>No holidays found</strong><p>Try another hotel name or destination.</p></div></div>}
 
             {!loading && !error && visibleStays.length > 0 && (
               <div className="stay-grid">
@@ -218,7 +218,7 @@ function App() {
         ) : (
           <section className="bookings-section">
             <div className="bookings-heading"><div><div className="eyebrow"><span className="eyebrow-dot" /> YOUR TRAVEL PLANS</div><h2>My bookings.</h2><p>All your confirmed and cancelled stays, in one place.</p></div><button className="outline-button" onClick={loadData}><RefreshCw size={15} /> Refresh</button></div>
-            {loading ? <div className="state-panel"><LoaderCircle className="spin" /><span>Loading bookings…</span></div> : bookings.length === 0 ? <div className="state-panel"><Ticket size={26} /><div><strong>No bookings yet</strong><p>Your next journey is waiting to happen.</p><button className="text-button" onClick={() => setActiveTab("stays")}>Explore stays <ArrowRight size={15} /></button></div></div> : (
+            {loading ? <div className="state-panel"><LoaderCircle className="spin" /><span>Loading bookings…</span></div> : bookings.length === 0 ? <div className="state-panel"><Ticket size={26} /><div><strong>No bookings yet</strong><p>Your next journey is waiting to happen.</p><button className="text-button" onClick={() => setActiveTab("stays")}>Search holidays <ArrowRight size={15} /></button></div></div> : (
               <div className="booking-list">
                 {bookings.slice().sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).map((booking) => {
                   const stay = stays.find((item) => item.id === booking.accommodationId);
@@ -234,17 +234,17 @@ function App() {
         )}
 
         <section className="why-section" id="why">
-          <div className="why-heading"><div className="eyebrow light"><Sparkles size={14} /> THE TRAVELHUB DIFFERENCE</div><h2>Good trips start<br />with <em>great stays.</em></h2></div>
-          <div className="why-features"><div><span>01</span><ShieldCheck /><h3>Clear availability</h3><p>Room availability is checked by the booking service before a reservation is confirmed.</p></div><div><span>02</span><Compass /><h3>Places to discover</h3><p>Explore stays from a growing collection of destinations.</p></div><div><span>03</span><Heart /><h3>Plans in one place</h3><p>View your booking references and cancel a booking when plans change.</p></div></div>
+          <div className="why-heading"><div className="eyebrow light"><Sparkles size={14} /> THE HOLIDAYS DIFFERENCE</div><h2>Great holidays<br />start with <em>great stays.</em></h2></div>
+          <div className="why-features"><div><span>01</span><ShieldCheck /><h3>Clear availability</h3><p>Room availability is checked by the booking service before a reservation is confirmed.</p></div><div><span>02</span><Compass /><h3>Places to discover</h3><p>Search holidays from a growing collection of destinations.</p></div><div><span>03</span><Heart /><h3>Plans in one place</h3><p>View your booking references and cancel a booking when plans change.</p></div></div>
         </section>
       </main>
 
-      <footer className="footer"><a className="brand footer-brand" href="#home"><span className="brand-mark"><Compass size={19} /></span>travel<span>hub</span><i>.</i></a><p>Find your somewhere. © {new Date().getFullYear()} TravelHub.</p><span>Made for the journey.</span></footer>
+      <footer className="footer"><a className="brand footer-brand" href="#home"><span className="brand-mark"><Compass size={19} /></span><span className="brand-name">holidays</span></a><p>Your next escape starts here. © {new Date().getFullYear()} Holidays.</p><span>Developed by Avinesh</span></footer>
 
       {selectedStay && (
         <div className="modal-backdrop" onMouseDown={(e) => { if (e.target === e.currentTarget) setSelectedStay(null); }}>
           <section className="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-title">
-            <div className="modal-top"><div><div className="eyebrow"><span className="eyebrow-dot" /> RESERVE YOUR STAY</div><h2 id="booking-title">{selectedStay.name}</h2><p><MapPin size={14} /> {selectedStay.destination}</p></div><button className="modal-close" onClick={() => setSelectedStay(null)} aria-label="Close"><X /></button></div>
+            <div className="modal-top"><div><div className="eyebrow"><span className="eyebrow-dot" /> BOOK YOUR HOLIDAY</div><h2 id="booking-title">{selectedStay.name}</h2><p><MapPin size={14} /> {selectedStay.destination}</p></div><button className="modal-close" onClick={() => setSelectedStay(null)} aria-label="Close"><X /></button></div>
             <div className="modal-summary"><img src={photos[selectedStay.destination] || fallbackPhoto} alt="" /><div><strong>{money(selectedStay.nightlyRate)} <small>/ night</small></strong><span>{selectedStay.roomsAvailable} rooms currently available</span></div></div>
             <form className="booking-form" onSubmit={submitBooking}>
               <label className="full-field">Guest full name<input name="guestName" value={form.guestName} onChange={updateForm} required maxLength="120" placeholder="Name on the reservation" /></label>
