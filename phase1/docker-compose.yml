@@ -27,5 +27,10 @@ services:
     environment: {ACCOMMODATION_SERVICE_URL: http://accommodation-service:8081, BOOKING_SERVICE_URL: http://booking-service:8082}
     ports: ["8080:8080"]
     depends_on: [accommodation-service, booking-service]
+  frontend:
+    build: {context: ./frontend, dockerfile: Dockerfile}
+    ports: ["3000:80"]
+    depends_on: [api-gateway]
+    restart: unless-stopped
 volumes:
   travelhub-postgres-data:
