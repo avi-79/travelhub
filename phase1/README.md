@@ -1,4 +1,6 @@
-# TravelHub — Phase 1
+# Holidays — Phase 1
+
+**Holidays** is a TUI-inspired holiday accommodation discovery and booking application. Developed by Avinesh. It uses original branding and implementation, with React, Spring Boot microservices and PostgreSQL.
 
 A full-stack travel accommodation and booking learning application built with React, Spring Boot microservices and PostgreSQL. The frontend talks only to the API Gateway; each business service owns its own database.
 
@@ -23,7 +25,7 @@ accommodation_db              booking_db
 
 ## Features
 
-- Responsive TravelHub accommodation discovery UI.
+- Responsive Holidays accommodation discovery UI with original TUI-inspired styling.
 - Live accommodation catalogue and destination search from PostgreSQL.
 - Sort stays by nightly rate or available inventory.
 - Create a booking with guest name, check-in, check-out and room count.
