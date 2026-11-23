@@ -176,6 +176,28 @@ function App() {
           </div>
         </section>
 
+        <section className="destination-discovery" aria-label="Popular destinations">
+          <div className="destination-heading">
+            <div>
+              <div className="eyebrow"><span className="eyebrow-dot" /> A LITTLE INSPIRATION</div>
+              <h2>Where will you go next?</h2>
+              <p>Start with a place you love. Your next story is waiting.</p>
+            </div>
+            <button className="destination-view-all" onClick={() => { setSearch(""); setActiveTab("stays"); }}>View all stays <ArrowRight size={16} /></button>
+          </div>
+          <div className="destination-tiles">
+            <button className="destination-tile destination-spain" onClick={() => { setDestination("Spain"); setSearch("Spain"); setActiveTab("stays"); document.getElementById("stays")?.scrollIntoView({ behavior: "smooth" }); }}>
+              <span className="destination-tile-copy"><small>COASTAL DAYS & CITY NIGHTS</small><strong>Spain</strong><em>Explore stays <ArrowRight size={15} /></em></span>
+            </button>
+            <button className="destination-tile destination-portugal" onClick={() => { setDestination("Portugal"); setSearch("Portugal"); setActiveTab("stays"); document.getElementById("stays")?.scrollIntoView({ behavior: "smooth" }); }}>
+              <span className="destination-tile-copy"><small>SLOW DOWN BY THE SEA</small><strong>Portugal</strong><em>Explore stays <ArrowRight size={15} /></em></span>
+            </button>
+            <button className="destination-tile destination-switzerland" onClick={() => { setDestination("Switzerland"); setSearch("Switzerland"); setActiveTab("stays"); document.getElementById("stays")?.scrollIntoView({ behavior: "smooth" }); }}>
+              <span className="destination-tile-copy"><small>FRESH AIR & BIG VIEWS</small><strong>Switzerland</strong><em>Explore stays <ArrowRight size={15} /></em></span>
+            </button>
+          </div>
+        </section>
+
         {notice && (
           <div className={notice.type === "success" ? "notice success" : "notice error"} role="status">
             {notice.type === "success" ? <Check size={18} /> : <CircleAlert size={18} />}
