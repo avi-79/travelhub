@@ -1,67 +1,128 @@
-# TravelHub — Phase 1: Spring Boot microservices
+# TravelHub — Phase 1
 
-Phase 1 is a local learning project with an API Gateway, Accommodation Service, Booking Service and PostgreSQL. Each business service owns its own database. The gateway routes client requests; Booking Service calls the Accommodation Service inventory API rather than accessing its database directly.
+A full-stack travel accommodation and booking learning application built with React, Spring Boot microservices and PostgreSQL. The frontend talks only to the API Gateway; each business service owns its own database.
 
 ## Architecture
 
 ```text
-Client -> API Gateway :8080 -> Accommodation Service :8081 -> accommodation_db
-                           -> Booking Service :8082 -> booking_db
-                                            |-- HTTP reserve/release --> Accommodation Service
-PostgreSQL :5432 (two separate databases)
+Browser :3000 (React/Vite)
+   | /api/*
+   v
+Nginx frontend container
+   |
+   v
+API Gateway :8080
+   |----------------------------|
+   v                            v
+Accommodation Service :8081   Booking Service :8082
+   |                            |  reserve/release inventory over HTTP
+   v                            v
+accommodation_db              booking_db
+           PostgreSQL 16 :5432
 ```
 
-## Requirements
-- JDK 21
-- Maven 3.9+
-- Docker Engine and Docker Compose v2
+## Features
 
-## Start the full application
+- Responsive TravelHub accommodation discovery UI.
+- Live accommodation catalogue and destination search from PostgreSQL.
+- Sort stays by nightly rate or available inventory.
+- Create a booking with guest name, check-in, check-out and room count.
+- Booking Service validates dates and reserves inventory through Accommodation Service.
+- View booking references and statuses.
+- Cancel a confirmed booking; inventory is released by the backend.
+- Flyway-managed schemas and sample accommodation data.
+- Docker Compose deployment with an Nginx frontend reverse proxy.
+
+## Requirements
+
+- Docker Engine and Docker Compose v2 (recommended)
+- For local development: Node.js 20+, JDK 21 and Maven 3.9+
+
+## Run the complete application
+
 From this directory:
 
 ```bash
 docker compose up --build
 ```
 
-The first startup creates both databases; Flyway creates the tables and sample accommodation records. Endpoints:
-- Gateway: http://localhost:8080
-- Accommodations: http://localhost:8080/api/accommodations
-- Health: http://localhost:8080/actuator/health (also available on ports 8081 and 8082)
+Open **http://localhost:3000**. API Gateway is available at http://localhost:8080 and PostgreSQL at localhost:5432.
 
-Create a sample booking:
+Useful commands:
 
 ```bash
-curl -X POST http://localhost:8080/api/bookings \\
-  -H 'Content-Type: application/json' \\
-  -d '{"accommodationId":1001,"guestName":"Alex Morgan","checkIn":"2027-05-10","checkOut":"2027-05-14","rooms":2}'
+docker compose ps
+docker compose logs -f frontend api-gateway accommodation-service booking-service
+docker compose down
 ```
 
-Use `GET /api/bookings`, `GET /api/bookings/{reference}`, and `POST /api/bookings/{reference}/cancel`. Search destinations with `GET /api/accommodations?destination=Spain`.
-
-## Run with Maven
-Start PostgreSQL first using `docker compose up -d postgres`. Then run each command in a separate terminal from this directory:
+The PostgreSQL data is stored in the `travelhub-postgres-data` named volume. To reset this disposable learning database and rerun initialization from scratch:
 
 ```bash
-mvn clean package
-mvn -pl accommodation-service spring-boot:run
-mvn -pl booking-service spring-boot:run
-mvn -pl api-gateway spring-boot:run
+docker compose down -v
+docker compose up --build
 ```
 
-## Implementation notes
-- Accommodation Service owns catalogue and inventory; Booking Service owns bookings.
-- Inventory reservation uses a conditional SQL update, preventing concurrent requests from reserving more rooms than are available.
-- Booking validates dates, reserves inventory, then persists the booking. If persistence fails, it attempts to compensate by releasing inventory.
-- Cancellation releases inventory and marks the booking cancelled; a repeated cancellation returns HTTP 409.
-- Flyway owns schema changes; Hibernate uses `ddl-auto: validate`.
-- Actuator exposes health and info.
+**Warning:** `docker compose down -v` permanently deletes the local database volume and all bookings in it.
 
-## Troubleshooting
-- Check database startup: `docker compose logs postgres`; readiness: `docker compose exec postgres pg_isready -U traveluser`.
-- Postgres initialization scripts run only when the data volume is first created.
-- Reset this disposable lab database with `docker compose down -v` (this deletes the local database volume).
-- If the gateway returns a 5xx response, inspect `docker compose logs accommodation-service booking-service api-gateway`.
-- HTTP 409 when booking usually means insufficient inventory; cancellation conflicts if already cancelled.
+## Local development
 
-## Scope and next phases
-This is an educational starter, not a production booking platform. Authentication, payments, durable saga/outbox, idempotency keys, and production-grade retry handling are not included. Keep it local and do not expose it publicly. Kubernetes, Helm, Ingress, OpenLens, CI/CD and Argo CD are planned for later phases.
+Start PostgreSQL and the backend containers:
+
+```bash
+docker compose up -d postgres accommodation-service booking-service api-gateway
+```
+
+Then in a separate terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open http://localhost:5173. Vite proxies `/api` calls to the API Gateway on port 8080.
+
+Build the frontend:
+
+```bash
+cd frontend
+npm ci
+npm run build
+```
+
+## API endpoints
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/accommodations` | List accommodations |
+| GET | `/api/accommodations?destination=Spain` | Filter by destination |
+| GET | `/api/accommodations/{id}` | Accommodation details |
+| POST | `/api/bookings` | Create booking |
+| GET | `/api/bookings` | List bookings |
+| GET | `/api/bookings/{reference}` | Booking details |
+| POST | `/api/bookings/{reference}/cancel` | Cancel booking |
+
+Example booking request:
+
+```json
+{
+  "accommodationId": 1001,
+  "guestName": "Alex Morgan",
+  "checkIn": "2027-05-10",
+  "checkOut": "2027-05-14",
+  "rooms": 2
+}
+```
+
+## Database ownership
+
+- `accommodation_db` is owned by Accommodation Service.
+- `booking_db` is owned by Booking Service.
+- Booking Service never queries the accommodation database directly. It calls the inventory API to reserve/release rooms.
+
+## Scope and production considerations
+
+This is a learning application, not a production-ready travel marketplace. It currently does not implement user authentication, payment processing, date-specific inventory, price snapshots, idempotency keys, durable saga/outbox processing, or production secrets management. Do not expose it publicly or use it for real customer bookings. These are suitable follow-on engineering milestones.
+
+Kubernetes, Helm, Ingress, OpenLens, Jenkins, Argo CD and monitoring are planned for subsequent DevOps phases.
