@@ -33,3 +33,123 @@
 
 .booking-estimate{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 14px;background:#eef5fc;border:1px solid #dbe9f7;color:#4f6680;font-size:11px}.booking-estimate strong{color:#0756a4;font:700 13px Manrope,sans-serif;text-align:right}
 @media(max-width:420px){.booking-estimate{align-items:flex-start;flex-direction:column}.booking-estimate strong{text-align:left}}
+
+
+/* Polished Holidays experience */
+:root {
+  --ink: #102f50;
+  --muted: #64778b;
+  --green: #0756a4;
+  --lime: #ffd500;
+  --paper: #ffffff;
+  --line: #e5ebf2;
+}
+html { scroll-padding-top: 84px; }
+body { background: #f7f9fc; color: var(--ink); }
+.site-shell { background: #fff; }
+.topbar {
+  height: 78px;
+  padding: 0 max(6%, calc((100% - 1240px) / 2));
+  box-shadow: 0 3px 18px rgba(12, 43, 75, .06);
+}
+.brand { gap: 4px; font-size: 27px; letter-spacing: -1.5px; }
+.brand-mark { width: 38px; height: 38px; margin-right: 7px; }
+.main-nav { gap: 34px; }
+.nav-link { font-size: 14px; padding: 12px 2px; }
+.topbar-cta { padding: 14px 20px; font-size: 13px; border-radius: 5px; }
+.hero { min-height: 625px; }
+.hero-image { background-position: center 52%; }
+.hero-shade {
+  background: linear-gradient(90deg, rgba(4, 31, 62, .91) 0%, rgba(5, 48, 91, .69) 48%, rgba(5, 48, 91, .12) 100%);
+}
+.hero-content { width: min(1180px, 88%); padding: 96px 0 105px; }
+.hero h1 { font-size: clamp(64px, 7.2vw, 94px); line-height: .99; margin: 27px 0 22px; letter-spacing: -3.8px; }
+.hero-content > p { max-width: 500px; font-size: 17px; line-height: 1.75; }
+.search-panel {
+  width: min(760px, 100%);
+  padding: 9px;
+  border-radius: 8px;
+  box-shadow: 0 18px 55px rgba(0, 18, 42, .24);
+}
+.search-input-wrap { padding: 10px 20px; }
+.search-input-wrap small { font-size: 10px; }
+.search-input-wrap input { font-size: 14px; min-height: 23px; }
+.search-submit { min-width: 190px; height: 56px; justify-content: center; border-radius: 5px; font-size: 13px; }
+.hero-proof { gap: 28px; margin-top: 25px; font-size: 12px; }
+.hero-caption { right: max(6%, calc((100% - 1240px) / 2)); }
+.intro-row { width: min(1180px, 88%); margin: 88px auto 42px; }
+.intro-row h2, .bookings-heading h2 { color: #123b65; font-size: clamp(42px, 4.7vw, 58px); line-height: 1.04; }
+.section-copy, .bookings-heading p { font-size: 14px; }
+.collection-stats { gap: 55px; }
+.collection-stats strong { font-size: 36px; }
+.collection-stats span { font-size: 11px; }
+.listing-section { width: min(1180px, 88%); margin-bottom: 105px; }
+.listing-toolbar { padding: 21px 0 25px; }
+.result-count { font-size: 13px; }
+.filter-search, .sort-select { height: 44px; border-radius: 5px; padding: 0 14px; }
+.filter-search input, .sort-select select { font-size: 12px; }
+.filter-search input { width: 155px; }
+.stay-grid, .loading-grid { gap: 24px; }
+.stay-card {
+  overflow: hidden;
+  border: 1px solid #e7edf4;
+  border-radius: 9px;
+  box-shadow: 0 5px 20px rgba(20, 55, 88, .045);
+}
+.stay-card:hover { transform: translateY(-6px); box-shadow: 0 16px 34px rgba(20, 55, 88, .12); }
+.stay-photo-wrap { height: 220px; }
+.stay-photo-wrap > img { display: block; }
+.favorite-button { width: 36px; height: 36px; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+.availability { border-radius: 4px; padding: 7px 10px; font-size: 10px; }
+.stay-card-body { padding: 20px 18px 18px; }
+.stay-location { font-size: 11px; }
+.stay-card h3 { font-size: 18px; line-height: 1.35; min-height: 48px; }
+.stay-meta { font-size: 10px; }
+.stay-price strong { font-size: 21px; }
+.stay-price span { font-size: 11px; }
+.round-arrow { width: 40px; height: 40px; transition: .2s ease; }
+.round-arrow:hover { transform: translateX(2px); }
+.state-panel { border-radius: 8px; background: #fbfcfe; }
+.notice { border-radius: 6px; }
+.why-section {
+  padding: 88px max(6%, calc((100% - 1240px) / 2)) 94px;
+  grid-template-columns: .9fr 1.1fr;
+}
+.why-heading h2 { font-size: clamp(46px, 5vw, 66px); line-height: 1.04; }
+.why-features { gap: 30px; }
+.why-features h3 { font-size: 15px; }
+.why-features p { font-size: 12px; line-height: 1.85; }
+.footer { padding: 30px max(6%, calc((100% - 1240px) / 2)); }
+.bookings-section { width: min(1180px, 88%); }
+.booking-card { border-radius: 8px; padding: 22px 24px; }
+.booking-title-row h3 { font-size: 16px; }
+.cancel-button, .outline-button { border-radius: 4px; font-size: 11px; }
+.booking-modal { border-radius: 10px; }
+.modal-close { border-radius: 5px; }
+.booking-form input, .booking-form select { border-radius: 5px; }
+.confirm-button { border-radius: 5px; }
+@media (max-width: 1000px) {
+  .topbar { padding: 0 5%; }
+  .hero-content { width: 90%; }
+  .intro-row, .listing-section, .bookings-section { width: 90%; }
+  .why-section { padding-left: 5%; padding-right: 5%; }
+}
+@media (max-width: 650px) {
+  .topbar { height: 70px; padding: 0 5%; }
+  .brand { font-size: 24px; }
+  .hero { min-height: 610px; }
+  .hero-content { width: 90%; padding: 78px 0 82px; }
+  .hero h1 { font-size: clamp(56px, 14vw, 68px); letter-spacing: -2.8px; }
+  .hero-content > p { font-size: 14px; }
+  .search-panel { padding: 8px; gap: 5px; }
+  .search-submit { width: 100%; min-width: 0; }
+  .hero-proof { flex-wrap: wrap; gap: 12px 20px; font-size: 10px; }
+  .intro-row { margin-top: 66px; }
+  .intro-row h2 { font-size: 43px; }
+  .collection-stats { gap: 38px; }
+  .stay-photo-wrap { height: 235px; }
+  .stay-card h3 { min-height: 0; }
+  .why-section { padding: 65px 6%; }
+  .why-heading h2 { font-size: 47px; }
+  .footer { padding: 28px 6%; }
+}
