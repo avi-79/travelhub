@@ -177,3 +177,41 @@ body { background: #f7f9fc; color: var(--ink); }
 .destination-tile:hover .destination-tile-copy em svg{transform:translateX(4px)}
 @media(max-width:800px){.destination-tiles{grid-template-columns:1fr 1fr}.destination-tile:first-child{grid-column:span 2;min-height:280px}.destination-tile{min-height:240px}}
 @media(max-width:560px){.destination-discovery{width:90%;margin-bottom:75px}.destination-heading{align-items:flex-start;flex-direction:column;gap:10px}.destination-heading h2{font-size:34px}.destination-heading p{font-size:13px}.destination-tiles{grid-template-columns:1fr;gap:13px}.destination-tile:first-child{grid-column:auto}.destination-tile{min-height:245px}.destination-tile-copy{left:20px;bottom:20px}}
+
+
+/* Complete holiday search and richer accommodation cards */
+.search-panel-expanded{display:grid;grid-template-columns:minmax(220px,1.7fr) minmax(125px,1fr) minmax(125px,1fr) minmax(105px,.8fr) auto;align-items:center;gap:0;width:min(1080px,100%);padding:10px}
+.search-panel-expanded>label{min-width:0;min-height:58px;display:flex;align-items:center;padding:8px 15px;border-right:1px solid #e6ebf1;color:#0756a4}
+.search-panel-expanded .search-destination-field{padding-left:14px;gap:12px}
+.search-panel-expanded label span{min-width:0;display:flex;flex-direction:column;gap:7px;width:100%}
+.search-panel-expanded label small{font-size:9px;letter-spacing:1.15px;font-weight:800;color:#71849a;white-space:nowrap}
+.search-panel-expanded input,.search-panel-expanded select{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#183a5c;font:500 12px "DM Sans",sans-serif}
+.search-panel-expanded input::placeholder{color:#8b9aab}
+.search-panel-expanded input[type=date]{font-size:11px}
+.search-panel-expanded .search-submit{height:56px;min-width:132px;margin-left:9px;padding:0 17px;white-space:nowrap}
+.search-helper{margin:10px 0 0!important;font-size:10px!important;color:#e5edf6!important;letter-spacing:.15px}
+.stay-price{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.stay-price small{font-size:9px;font-weight:800;letter-spacing:1.1px;color:#77899d}
+.stay-price strong{font-size:23px}
+.stay-price span{font-size:10px}
+.stay-card-action{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:39px;padding:0 13px;border:0;border-radius:4px;background:#0756a4;color:white;font-size:11px;font-weight:700;white-space:nowrap;transition:background .2s,transform .2s}
+.stay-card-action:hover:not(:disabled){background:#06427d;transform:translateY(-1px)}
+.stay-card-action:disabled{cursor:not-allowed;opacity:.45}
+.stay-card-bottom{gap:8px}
+.stay-meta{gap:8px}
+.stay-meta span:last-child{display:none}
+@media(max-width:900px){
+ .search-panel-expanded{grid-template-columns:1fr 1fr;gap:0}
+ .search-panel-expanded .search-destination-field{grid-column:span 2;border-bottom:1px solid #e6ebf1;border-right:0}
+ .search-panel-expanded .search-date-field{border-bottom:1px solid #e6ebf1}
+ .search-panel-expanded .search-rooms-field{border-right:0;border-bottom:1px solid #e6ebf1}
+ .search-panel-expanded .search-submit{grid-column:span 2;margin:9px 0 0;width:100%}
+}
+@media(max-width:650px){
+ .search-panel-expanded{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:8px}
+ .search-panel-expanded>label,.search-panel-expanded .search-destination-field{width:100%;min-height:55px;padding:8px 12px;border-right:0;border-bottom:1px solid #e6ebf1}
+ .search-panel-expanded .search-submit{margin:8px 0 0;width:100%;height:49px}
+ .search-helper{line-height:1.5!important}
+ .stay-card-bottom{align-items:center}
+ .stay-card-action{padding:0 11px}
+}
