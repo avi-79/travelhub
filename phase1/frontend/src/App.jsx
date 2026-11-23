@@ -22,6 +22,9 @@ function App() {
   const [stays, setStays] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [destination, setDestination] = useState("");
+  const [searchCheckIn, setSearchCheckIn] = useState("");
+  const [searchCheckOut, setSearchCheckOut] = useState("");
+  const [searchRooms, setSearchRooms] = useState(1);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("recommended");
   const [loading, setLoading] = useState(true);
@@ -70,7 +73,7 @@ function App() {
 
   const openBooking = (stay) => {
     setSelectedStay(stay);
-    setForm({ guestName: "", checkIn: "", checkOut: "", rooms: 1 });
+    setForm({ guestName: "", checkIn: searchCheckIn, checkOut: searchCheckOut, rooms: Math.min(searchRooms, Math.max(1, stay.roomsAvailable)) });
     setNotice(null);
   };
 
@@ -152,13 +155,26 @@ function App() {
             <div className="eyebrow light"><Sparkles size={14} /> MAKE ROOM FOR SOMEWHERE NEW</div>
             <h1>Your next<br /><em>great escape.</em></h1>
             <p>Discover inspiring places to stay and make more of every moment away.</p>
-            <form className="search-panel" onSubmit={(event) => { event.preventDefault(); setSearch(destination); setActiveTab("stays"); document.getElementById("stays")?.scrollIntoView({ behavior: "smooth" }); }}>
-              <label className="search-input-wrap">
-                <MapPin size={19} />
-                <span><small>WHERE WOULD YOU LIKE TO GO?</small><input value={destination} onChange={(e) => setDestination(e.target.value)} placeholder="Search a destination or hotel" /></span>
+            <form className="search-panel search-panel-expanded" onSubmit={(event) => {
+              event.preventDefault();
+              if ((searchCheckIn && !searchCheckOut) || (!searchCheckIn && searchCheckOut) || (searchCheckIn && searchCheckOut && searchCheckOut <= searchCheckIn)) {
+                setNotice({ type: "error", text: "Please choose valid check-in and check-out dates." });
+                return;
+              }
+              setSearch(destination);
+              setActiveTab("stays");
+              document.getElementById("stays")?.scrollIntoView({ behavior: "smooth" });
+            }}>
+              <label className="search-input-wrap search-destination-field">
+                <MapPin size={20} />
+                <span><small>DESTINATION OR HOTEL</small><input value={destination} onChange={(e) => setDestination(e.target.value)} placeholder="Where do you want to go?" /></span>
               </label>
-              <button className="search-submit" type="submit"><Search size={18} /> Search holidays</button>
+              <label className="search-date-field"><span><small>CHECK IN</small><input type="date" min={today} value={searchCheckIn} onChange={(e) => setSearchCheckIn(e.target.value)} /></span></label>
+              <label className="search-date-field"><span><small>CHECK OUT</small><input type="date" min={searchCheckIn || today} value={searchCheckOut} onChange={(e) => setSearchCheckOut(e.target.value)} /></span></label>
+              <label className="search-rooms-field"><span><small>ROOMS</small><select value={searchRooms} onChange={(e) => setSearchRooms(Number(e.target.value))}><option value="1">1 room</option><option value="2">2 rooms</option><option value="3">3 rooms</option><option value="4">4 rooms</option></select></span></label>
+              <button className="search-submit" type="submit"><Search size={18} /> Search</button>
             </form>
+            <p className="search-helper">Choose your dates and rooms. Final room availability is checked when you book.</p>
             <div className="hero-proof"><span><ShieldCheck size={15} /> Inventory checked at booking</span><span><Globe2 size={15} /> Handpicked places</span></div>
           </div>
           <div className="hero-caption"><span>01 / 03</span><span>THE WORLD IS WAITING</span></div>
@@ -234,7 +250,10 @@ function App() {
                       <div className="stay-location"><MapPin size={13} /> {stay.destination}</div>
                       <h3>{stay.name}</h3>
                       <div className="stay-meta"><span><BedDouble size={15} /> {stay.roomsAvailable} rooms left</span><span><Globe2 size={15} /> Explore</span></div>
-                      <div className="stay-card-bottom"><div className="stay-price"><strong>{money(stay.nightlyRate)}</strong><span> / night</span></div><button className="round-arrow" disabled={stay.roomsAvailable < 1} onClick={() => openBooking(stay)} aria-label={`Book ${stay.name}`}><ArrowRight size={19} /></button></div>
+                      <div className="stay-card-bottom">
+                        <div className="stay-price"><small>FROM</small><strong>{money(stay.nightlyRate)}</strong><span> / room / night</span></div>
+                        <button className="stay-card-action" disabled={stay.roomsAvailable < 1} onClick={() => openBooking(stay)}>{stay.roomsAvailable > 0 ? <>View stay <ArrowRight size={16} /></> : "Unavailable"}</button>
+                      </div>
                     </div>
                   </article>
                 ))}
