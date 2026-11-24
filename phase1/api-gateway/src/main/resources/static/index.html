@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#102b2a">
+  <meta name="description" content="TravelHub — discover stays and manage your trips.">
+  <title>TravelHub — Find your next escape</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#"><span class="brand-mark">T</span> travel<span>hub</span></a>
+    <nav><a href="#stays">Discover stays</a><a href="#bookings">My bookings</a><a href="#why">Why TravelHub</a></nav>
+    <a class="header-cta" href="#stays">Find a stay <span>↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> YOUR NEXT CHAPTER STARTS HERE</p>
+        <h1>Make room for<br><em>somewhere new.</em></h1>
+        <p class="hero-text">Thoughtful stays, inspiring places and more reasons to take the trip.</p>
+        <a class="hero-link" href="#stays">Explore stays <span>↓</span></a>
+      </div>
+      <div class="hero-image" role="img" aria-label="Beautiful coastal holiday destination">
+        <div class="image-note"><span>✳</span><div><strong>Find your somewhere</strong><small>Little escapes. Big memories.</small></div></div>
+      </div>
+      <div class="hero-stamp">GO<br>FAR.<br>FEEL<br>MORE.</div>
+    </section>
+
+    <section class="search-wrap" id="stays">
+      <div class="section-kicker">START EXPLORING</div>
+      <div class="search-panel">
+        <label class="search-field"><span>DESTINATION</span><input id="destination" type="text" placeholder="Where do you want to go?"></label>
+        <label class="search-field"><span>CHECK IN</span><input id="checkIn" type="date"></label>
+        <label class="search-field"><span>CHECK OUT</span><input id="checkOut" type="date"></label>
+        <label class="search-field rooms-field"><span>ROOMS</span><input id="rooms" type="number" min="1" max="10" value="1"></label>
+        <button id="searchButton" class="search-button">Search stays <span>→</span></button>
+      </div>
+      <p class="search-hint">Explore our handpicked stays and find the right place for your next break.</p>
+    </section>
+
+    <section class="stays-section">
+      <div class="section-heading"><div><p class="eyebrow">A CHANGE OF SCENERY</p><h2>Somewhere worth <em>going.</em></h2></div><p>From slow coastal mornings to city adventures, your next favourite place is waiting.</p></div>
+      <div id="status" class="status" aria-live="polite">Loading stays from TravelHub services…</div>
+      <div id="staysGrid" class="stays-grid"></div>
+    </section>
+
+    <section class="feature-band" id="why">
+      <div class="feature-photo"></div>
+      <div class="feature-copy"><p class="eyebrow">THE TRAVELHUB WAY</p><h2>More than a place<br>to <em>stay.</em></h2><p>Discover a stay that makes the whole trip feel special. Browse available rooms, book your break and keep your plans together in one place.</p><a href="#stays" class="text-link">Find your stay <span>→</span></a></div>
+    </section>
+
+    <section class="bookings-section" id="bookings">
+      <div class="section-heading"><div><p class="eyebrow">YOUR TRIPS, TOGETHER</p><h2>My <em>bookings.</em></h2></div><button id="refreshBookings" class="outline-button">Refresh bookings ↻</button></div>
+      <div id="bookingsList" class="bookings-list"><p class="empty-state">Your bookings will appear here after you make a reservation.</p></div>
+    </section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="#"><span class="brand-mark">T</span> travel<span>hub</span></a><p>Find your somewhere. Make it memorable.</p><small>© 2026 TravelHub · A learning project</small></footer>
+
+  <dialog id="bookingDialog" class="booking-dialog">
+    <form id="bookingForm" method="dialog">
+      <button type="button" class="dialog-close" id="closeDialog" aria-label="Close">×</button>
+      <p class="eyebrow">MAKE IT A TRIP</p><h2>Book your <em>stay.</em></h2>
+      <p id="selectedStay" class="selected-stay"></p>
+      <input type="hidden" id="accommodationId">
+      <label>Your name<input id="guestName" required maxlength="120" placeholder="Enter guest name"></label>
+      <div class="dialog-dates"><label>Check in<input id="dialogCheckIn" type="date" required></label><label>Check out<input id="dialogCheckOut" type="date" required></label></div>
+      <label>Rooms<input id="dialogRooms" type="number" min="1" max="10" value="1" required></label>
+      <button class="search-button dialog-submit" type="submit">Confirm booking <span>→</span></button>
+      <p id="bookingMessage" class="form-message" aria-live="polite"></p>
+    </form>
+  </dialog>
+  <script src="/js/app.js" defer></script>
+</body>
+</html>
